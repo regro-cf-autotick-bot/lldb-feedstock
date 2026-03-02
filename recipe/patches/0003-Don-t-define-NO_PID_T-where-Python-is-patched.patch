@@ -1,14 +1,14 @@
-From 3ed315b6f53c8a560d9f8abbd3b86e46e82848b3 Mon Sep 17 00:00:00 2001
+From f4e4a9274cdc33fc394844c12972b0d526eb2aa9 Mon Sep 17 00:00:00 2001
 From: "Uwe L. Korn" <uwe.korn@quantco.com>
 Date: Tue, 20 May 2025 10:39:09 +0200
-Subject: [PATCH 3/3] Don't define NO_PID_T where Python is patched
+Subject: [PATCH 3/4] Don't define NO_PID_T where Python is patched
 
 ---
  lldb/source/Plugins/ScriptInterpreter/Python/lldb-python.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/lldb/source/Plugins/ScriptInterpreter/Python/lldb-python.h b/lldb/source/Plugins/ScriptInterpreter/Python/lldb-python.h
-index 4a6c11dba02e..9fc5e87f51f0 100644
+index 0c281793613a..5f61f4df8f99 100644
 --- a/lldb/source/Plugins/ScriptInterpreter/Python/lldb-python.h
 +++ b/lldb/source/Plugins/ScriptInterpreter/Python/lldb-python.h
 @@ -28,7 +28,7 @@ static llvm::Expected<bool> *g_fcxx_modules_workaround [[maybe_unused]];
