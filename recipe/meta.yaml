@@ -15,9 +15,12 @@ source:
     - patches/0002-Define-CPU_SUBTYPE_ARM64E-if-not-available.patch
     # This is needed due to c-f's remove of pid_t in Python: https://github.com/conda-forge/python-feedstock/pull/767
     - patches/0003-Don-t-define-NO_PID_T-where-Python-is-patched.patch  # [win and py>=311]
+    - patches/0004-fix-file-extension-on-windows.patch                  # [win]
 
 build:
-  number: 0
+  number: 1
+  python_version_independent: true  # [is_abi3]
+  skip: true                        # [is_abi3 and not is_python_min]
 
 requirements:
   build:
@@ -32,6 +35,7 @@ requirements:
     - cmake >=3.4.3
     - ninja
   host:
+    - python-abi3                   # [is_abi3]
     - python
     - llvmdev =={{ version }}
     - clangdev =={{ version }}
@@ -55,10 +59,15 @@ requirements:
     - clangdev =={{ version }}
 
 test:
+  requires:
+    - abi3audit                     # [is_abi3]
   imports:
     - lldb
   commands:
     - lldb --version
+    - abi3audit $SP_DIR/lldb/native/_lldb.abi3.so -s -v --assume-minimum-abi3 {{ python_min }}      # [unix and is_abi3]
+    - abi3audit %SP_DIR%/lldb/native/_lldb.abi3.pyd -s -v --assume-minimum-abi3 {{ python_min }}    # [win and is_abi3]
+
 
 about:
   home: http://llvm.org/
