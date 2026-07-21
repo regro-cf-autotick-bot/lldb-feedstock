@@ -54,6 +54,8 @@ requirements:
     - libedit  # [not win]
     - python
     - six
+    # need to add this manually because the bootstrap compiler has no run-export
+    - libcxx   # [osx]
   run_constrained:
     - llvmdev =={{ version }}
     - clangdev =={{ version }}
