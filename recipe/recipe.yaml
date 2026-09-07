@@ -80,6 +80,13 @@ tests:
         - lldb
   - script:
       - lldb --version
+      - lldb-argdumper --version
+      - lldb-dap --version
+      - lldb-instr --version
+      # can't test without running mcp server
+      # - lldb-mcp --version
+      - lldb-server --version
+      - yaml2macho-core --version
   - requirements:
       run:
         - abi3audit
