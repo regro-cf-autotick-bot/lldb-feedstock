@@ -1,10 +1,15 @@
 @echo on
+setlocal enabledelayedexpansion
 
 mkdir build
 cd build
 
 echo %PATH%
 set PY_VER_NO_DOT=%PY_VER:.=%
+
+if "%is_abi3%"=="true" (
+  set PY_VER_NO_DOT=3
+)
 
 set "PREFIX_CYG=%PREFIX:\=/%"
 
@@ -18,12 +23,12 @@ cmake -G "Ninja" ^
     -DLLVM_INCLUDE_DOCS=OFF ^
     -DLLVM_TARGETS_TO_BUILD=X86 ^
     -DLLDB_ENABLE_PYTHON=ON ^
-    -DLLDB_ENABLE_PYTHON_LIMITED_API=OFF ^
+    -DLLDB_ENABLE_PYTHON_LIMITED_API=ON ^
     -DLLDB_ENABLE_SWIG=ON ^
     -DLLDB_PYTHON_RELATIVE_PATH:PATH="..\Lib\site-packages" ^
     -DLLDB_EMBED_PYTHON_HOME=OFF ^
-    -DPython3_LIBRARIES:FILEPATH="%PREFIX_CYG%/libs/python%PY_VER_NO_DOT%.lib" ^
-    -DPython3_INCLUDE_DIRS:PATH=%PREFIX_CYG%/include ^
+    -DPython3_LIBRARIES:FILEPATH="%PREFIX_CYG%/libs/python!PY_VER_NO_DOT!.lib" ^
+    -DPython3_INCLUDE_DIRS:FILEPATH=%PREFIX_CYG%/include ^
     -DPython3_EXECUTABLE:FILEPATH=%PREFIX_CYG%/python.exe ^
     -DSWIG_EXECUTABLE=%LIBRARY_BIN%/swig.exe ^
     %SRC_DIR%\lldb

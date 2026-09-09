@@ -18,6 +18,10 @@ if [[ "$target_platform" == osx* ]]; then
   export CXXFLAGS="$CXXFLAGS -DTARGET_OS_OSX=1"
 fi
 
+if [[ "$target_platform" == linux* ]]; then
+  export LDFLAGS="$LDFLAGS -Wl,--no-as-needed"
+fi
+
 if [[ "${target_platform}" != "${build_platform}" ]]; then
   NATIVE_FLAGS="-DCMAKE_C_COMPILER=$CC_FOR_BUILD;-DCMAKE_CXX_COMPILER=$CXX_FOR_BUILD;-DCMAKE_C_FLAGS=-O2;-DCMAKE_CXX_FLAGS=-O2"
   NATIVE_FLAGS="${NATIVE_FLAGS};-DCMAKE_EXE_LINKER_FLAGS=;-DCMAKE_MODULE_LINKER_FLAGS=;-DCMAKE_SHARED_LINKER_FLAGS="
@@ -30,18 +34,26 @@ if [[ "${target_platform}" != "${build_platform}" ]]; then
   export CMAKE_ARGS="${CMAKE_ARGS} -DLLVM_TABLEGEN=$BUILD_PREFIX/bin/llvm-tblgen -DLLDB_PYTHON_RELATIVE_PATH=${SP_PATH} -DLLDB_PYTHON_EXE_RELATIVE_PATH=bin/python -DLLDB_PYTHON_EXT_SUFFIX=$(python ../lldb/bindings/python/get-python-config.py LLDB_PYTHON_EXT_SUFFIX) -DNATIVE_LLVM_DIR=$BUILD_PREFIX/lib/cmake/llvm -DNATIVE_Clang_DIR=$BUILD_PREFIX/lib/cmake/clang"
 fi
 
+PY_VER_NODOT="${PY_VER//./}"
+if [[ "${is_abi3}" == "true" ]]; then
+  PY_VER_NODOT="3"
+fi
+
 cmake ${CMAKE_ARGS} \
   -G Ninja \
   -DLLDB_ENABLE_PYTHON=ON \
-  -DLLDB_ENABLE_PYTHON_LIMITED_API=OFF \
+  -DLLDB_ENABLE_PYTHON_LIMITED_API=ON \
   -DLLDB_ENABLE_LIBEDIT=ON \
   -DLLDB_ENABLE_CURSES=ON \
   -DLLDB_ENABLE_LZMA=ON \
   -DLLDB_ENABLE_LIBXML2=ON \
   -DLLDB_ENABLE_TESTS=OFF \
+  -DLLDB_PYTHON_RELATIVE_PATH:PATH="lib/python/site-packages" \
   -DLLDB_USE_SYSTEM_DEBUGSERVER=$LLDB_USE_SYSTEM_DEBUGSERVER \
   -DCURSES_LIBRARY=$PREFIX/lib/libncurses$SHLIB_EXT \
-  -DPython3_ROOT=$PREFIX \
+  -DPython3_LIBRARIES:FILEPATH=$PREFIX/lib/libpython$PY_VER_NODOT$SHLIB_EXT \
+  -DPython3_LIBRARY:FILEPATH=$PREFIX/lib/libpython$PY_VER_NODOT$SHLIB_EXT \
+  -DPython3_INCLUDE_DIRS:FILEPATH=$PREFIX/include/python$PY_VER \
   -DPython3_EXECUTABLE=$PREFIX/bin/python \
   -DHAVE_LIBCOMPRESSION=NO \
   ../lldb
