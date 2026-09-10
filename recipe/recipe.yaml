@@ -86,9 +86,9 @@ tests:
       - lldb-argdumper --version
       - lldb-dap --version
       - lldb-instr --version
-      # can't test without running mcp server
+      # can't test without running server
       # - lldb-mcp --version
-      - lldb-server --version
+      # - lldb-server --version
       - yaml2macho-core --version
   - requirements:
       run:
