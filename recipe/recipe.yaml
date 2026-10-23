@@ -1,5 +1,5 @@
 context:
-  version: "23.1.1"
+  version: "23.1.4"
 
 package:
   name: lldb
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-${{ version|replace(".rc", "-rc") }}.tar.gz
-  sha256: 851b3d701a4fbdd9f69536d4acda578469e810ca7056687d6556443f5fd39557
+  sha256: 3e1c70b30f623976c2046d94b8eeab6cac536f107914cb4ed7bac572a03131db
   patches:
     # Fix Python and Mac support
     - if: unix
@@ -47,7 +47,7 @@ requirements:
     # we're linking to `libpython3.{so,dylib}`
     - libpython
     - if: is_abi3
-      then:  python-abi3
+      then: python-abi3
     - llvm ==${{ version }}
     - llvmdev ==${{ version }}
     - clangdev ==${{ version }}
